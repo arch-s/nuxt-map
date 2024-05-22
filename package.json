@@ -1,7 +1,7 @@
 {
   "name": "nuxt-app",
-  "private": true,
   "type": "module",
+  "private": true,
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -10,10 +10,12 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
     "mapbox-gl": "^3.3.0",
     "nuxt": "^3.11.2",
     "nuxt-svgo": "^4.0.1",
     "prettier": "^3.2.5",
+    "tailwind-merge": "^2.3.0",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2"
   },

@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <NavBar />
+  <LayoutNavBar />
   <div class="mx-16 my-8">
     <slot />
   </div>

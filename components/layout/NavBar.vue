@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import Luigi from '~/assets/luigi.svg';
+import Luigi from 'assets/luigi.svg';
 import { routes } from '~/composables/routes';
+import NavLink from '~/components/layout/NavLink.vue';
 </script>
 
 <template>

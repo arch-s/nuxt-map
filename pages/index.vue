@@ -1,32 +1,90 @@
 <script setup lang="ts">
-interface markerData {
-  latitude: number;
-  longitude: number;
-  name: string;
-  description: string;
-  rating: number;
+import type { MapLocation } from '~/types/mapLocation';
+import type { Coordinate } from '~/types/coordinate';
+
+const mapId = 'mapId';
+const savedLocations = ref<Array<MapLocation>>([]);
+const lastClickedCoordinate = ref<Coordinate | null>(null);
+
+function saveLocation() {
+  if (!lastClickedCoordinate.value) return;
+
+  savedLocations.value.push({
+    coordinates: {
+      latitude: lastClickedCoordinate.value.latitude,
+      longitude: lastClickedCoordinate.value.longitude,
+    },
+    name: 'ooh la la',
+    description: 'nice',
+    rating: 69,
+  });
+
+  lastClickedCoordinate.value = null;
 }
 
-const savedMarkers = ref([]);
+function deleteLocation(location: MapLocation) {
+  return (savedLocations.value = savedLocations.value.filter(
+    l => l.coordinates.latitude !== location.coordinates.latitude
+  ));
+}
+
+useMapbox(mapId, map => {
+  map.on('click', e => {
+    lastClickedCoordinate.value = {
+      latitude: e.lngLat.lat,
+      longitude: e.lngLat.lng,
+    };
+  });
+});
 </script>
 
 <template>
   <div class="w-full h-full">
-    <h2 class="mb-6">My first map, no hate pls xox</h2>
+    <div class="flex flex-row justify-between mb-6">
+      <h2>My first map, no hate pls xox</h2>
+      <h2 v-if="lastClickedCoordinate !== null">
+        Currently selected - Lat: {{ lastClickedCoordinate?.latitude }}, Long:
+        {{ lastClickedCoordinate?.longitude }}
+      </h2>
+    </div>
     <div class="flex flex-row justify-between">
-      <div class="flex flex-col">
-        <span> This is the input now </span>
+      <div class="flex flex-col w-64 m-8">
+        <button class="bg-blue-600 text-white h-16 rounded-2xl" @click="saveLocation">
+          Save location
+        </button>
+        <span class="my-4">You have {{ savedLocations.length }} locations saved</span>
+        <div class="overflow-y-auto">
+          <HomeLocationDetails
+            v-for="location in savedLocations.values()"
+            :key="location.coordinates.latitude"
+            :map-location="location"
+            :on-delete="() => deleteLocation(location)"
+          />
+        </div>
       </div>
       <div class="relative w-full">
         <MapboxMap
           style="width: 100%; height: 1000px; position: relative"
-          map-id="yes"
+          :map-id="mapId"
           :options="{
             center: [-2.58791, 51.454514],
-            style: 'mapbox://styles/mapbox/streets-v12',
+            style: 'mapbox://styles/mapbox/light-v11?optimize=true',
             zoom: 15,
           }"
-        />
+        >
+          <MapboxDefaultMarker
+            v-for="location in savedLocations"
+            :key="location.coordinates.latitude"
+            :marker-id="location.coordinates.latitude.toString()"
+            :lnglat="[location.coordinates.longitude, location.coordinates.latitude]"
+          />
+          <MapboxDefaultMarker
+            v-if="lastClickedCoordinate !== null"
+            marker-id="temporary marker"
+            :options="{ color: '#B13FCE' }"
+            :lnglat="[lastClickedCoordinate.longitude, lastClickedCoordinate.latitude]"
+          />
+        </MapboxMap>
       </div>
     </div>
   </div>
