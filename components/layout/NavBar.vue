@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Luigi from '~/assets/luigi.svg';
 import { routes } from '~/composables/routes';
+import NavLink from '~/components/layout/NavLink.vue';
 </script>
 
 <template>
@@ -18,5 +19,3 @@ import { routes } from '~/composables/routes';
     />
   </div>
 </template>
-
-<style scoped></style>

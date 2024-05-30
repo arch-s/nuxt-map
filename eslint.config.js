@@ -4,4 +4,7 @@ export default antfu({
   stylistic: {
     semi: true,
   },
+  rules: {
+    'prefer-arrow-callback': 'error',
+  },
 });

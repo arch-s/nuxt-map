@@ -13,5 +13,3 @@ const { hideIfLoggedOut, path, displayName } = defineProps<NavLinkProps>();
     {{ displayName }}
   </NuxtLink>
 </template>
-
-<style scoped></style>
