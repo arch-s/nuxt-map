@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { floorNumber } from '~/utils/utils';
+import { floorToDecimalPlaces } from '~/utils/utils';
 import type { MapLocation } from '~/types/mapLocation';
 
 interface LocationDetailsProps {
   mapLocation: MapLocation;
-  onDelete: () => void;
+  onDelete: (location: MapLocation) => void;
 }
 
 const { mapLocation, onDelete } = defineProps<LocationDetailsProps>();
@@ -14,15 +14,17 @@ const { mapLocation, onDelete } = defineProps<LocationDetailsProps>();
   <div class="my-4">
     <div class="flex flex-row justify-between content-center">
       <h3>{{ mapLocation.name }}</h3>
-      <button class="rounded-3xl border border-red-500 p-2" @click="onDelete">x</button>
+      <button class="rounded-3xl border border-red-500 p-2" @click="onDelete(mapLocation)">
+        x
+      </button>
     </div>
     <p>
-      Lat: {{ floorNumber(mapLocation.coordinates.latitude, 3) }}, Long:
-      {{ floorNumber(mapLocation.coordinates.longitude, 3) }}
+      Lat:
+      {{ floorToDecimalPlaces({ number: mapLocation.coordinates.latitude, numberOfDecimals: 3 }) }},
+      Long:
+      {{ floorToDecimalPlaces({ number: mapLocation.coordinates.longitude, numberOfDecimals: 3 }) }}
     </p>
     <p>{{ mapLocation.description }}</p>
     <p>Rating: {{ mapLocation.rating }}</p>
   </div>
 </template>
-
-<style scoped></style>

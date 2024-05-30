@@ -6,14 +6,11 @@ const mapId = 'mapId';
 const savedLocations = ref<Array<MapLocation>>([]);
 const lastClickedCoordinate = ref<Coordinate | null>(null);
 
-function saveLocation() {
+function saveLocation(): void {
   if (!lastClickedCoordinate.value) return;
 
   savedLocations.value.push({
-    coordinates: {
-      latitude: lastClickedCoordinate.value.latitude,
-      longitude: lastClickedCoordinate.value.longitude,
-    },
+    coordinates: lastClickedCoordinate.value,
     name: 'ooh la la',
     description: 'nice',
     rating: 69,
@@ -22,10 +19,12 @@ function saveLocation() {
   lastClickedCoordinate.value = null;
 }
 
-function deleteLocation(location: MapLocation) {
-  return (savedLocations.value = savedLocations.value.filter(
-    l => l.coordinates.latitude !== location.coordinates.latitude
-  ));
+function deleteLocation(location: MapLocation): void {
+  savedLocations.value = savedLocations.value.filter(
+    l =>
+      l.coordinates.latitude !== location.coordinates.latitude &&
+      l.coordinates.longitude !== location.coordinates.longitude
+  );
 }
 
 useMapbox(mapId, map => {
@@ -55,10 +54,10 @@ useMapbox(mapId, map => {
         <span class="my-4">You have {{ savedLocations.length }} locations saved</span>
         <div class="overflow-y-auto">
           <HomeLocationDetails
-            v-for="location in savedLocations.values()"
-            :key="location.coordinates.latitude"
+            v-for="location in savedLocations"
+            :key="`${location.coordinates.latitude}${location.coordinates.longitude}`"
             :map-location="location"
-            :on-delete="() => deleteLocation(location)"
+            :on-delete="deleteLocation"
           />
         </div>
       </div>
@@ -89,5 +88,3 @@ useMapbox(mapId, map => {
     </div>
   </div>
 </template>
-
-<style scoped></style>
