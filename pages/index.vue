@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { MapLocation } from '~/types/mapLocation';
 import type { Coordinate } from '~/types/coordinate';
+import { getCoordinateAsArray, getCoordinateId } from '~/composables/coordinates';
+import LocationPopup from '~/components/home/LocationPopup.vue';
 
 const mapId = 'mapId';
 const savedLocations = ref<Array<MapLocation>>([]);
@@ -55,7 +57,7 @@ useMapbox(mapId, map => {
         <div class="overflow-y-auto">
           <HomeLocationDetails
             v-for="location in savedLocations"
-            :key="`${location.coordinates.latitude}${location.coordinates.longitude}`"
+            :key="getCoordinateId(location.coordinates)"
             :map-location="location"
             :on-delete="deleteLocation"
           />
@@ -74,14 +76,16 @@ useMapbox(mapId, map => {
           <MapboxDefaultMarker
             v-for="location in savedLocations"
             :key="location.coordinates.latitude"
-            :marker-id="location.coordinates.latitude.toString()"
-            :lnglat="[location.coordinates.longitude, location.coordinates.latitude]"
-          />
+            :marker-id="getCoordinateId(location.coordinates)"
+            :lnglat="getCoordinateAsArray(location.coordinates)"
+          >
+            <LocationPopup :location="location" />
+          </MapboxDefaultMarker>
           <MapboxDefaultMarker
             v-if="lastClickedCoordinate !== null"
             marker-id="temporary marker"
             :options="{ color: '#B13FCE' }"
-            :lnglat="[lastClickedCoordinate.longitude, lastClickedCoordinate.latitude]"
+            :lnglat="getCoordinateAsArray(lastClickedCoordinate)"
           />
         </MapboxMap>
       </div>
