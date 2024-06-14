@@ -6,8 +6,8 @@ interface routeMetadata {
 
 export const routes: Array<routeMetadata> = [
   {
-    displayName: 'Profile',
-    path: 'profile',
+    displayName: 'HTTP',
+    path: 'http',
     hideIfLoggedOut: true,
   },
   {
