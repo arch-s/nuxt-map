@@ -11,6 +11,11 @@ export const routes: Array<routeMetadata> = [
     hideIfLoggedOut: true,
   },
   {
+    displayName: 'Search',
+    path: 'search',
+    hideIfLoggedOut: true,
+  },
+  {
     displayName: 'Sign in',
     path: 'login',
     hideIfLoggedOut: false,
