@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { useDebounce } from '@vueuse/shared';
 import AutocompleteDetails from '~/components/search/AutocompleteDetails.vue';
 
 const searchString = ref('');
+const debouncedSearchString = useDebounce(searchString, 750);
 
 const autocompleteLimit = 10;
 const baseUrl = 'http://geodb-free-service.wirefreethought.com/v1/geo/countries';
@@ -18,7 +20,7 @@ const {
   watch: false,
 });
 
-watch(searchString, newSearchString => {
+watch(debouncedSearchString, newSearchString => {
   if (newSearchString.length >= 3) execute();
 });
 </script>
