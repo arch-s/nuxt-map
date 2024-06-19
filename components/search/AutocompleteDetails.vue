@@ -2,18 +2,20 @@
 import Luigi from '~/assets/luigi.svg';
 
 interface AutocompleteDetailsProps {
-  country: string;
+  countryName: string;
+  onSubmit: () => void;
 }
-const { country } = defineProps<AutocompleteDetailsProps>();
+const { countryName, onSubmit } = defineProps<AutocompleteDetailsProps>();
 </script>
 
 <template>
   <div
     class="w-full flex flex-row justify-between p-2 select-none cursor-pointer hover:bg-gray-200"
+    @click="onSubmit"
   >
     <Luigi class="w-8" />
     <div class="flex flex-col">
-      <p>{{ country }}</p>
+      <p>{{ countryName }}</p>
     </div>
   </div>
 </template>

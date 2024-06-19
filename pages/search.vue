@@ -1,17 +1,22 @@
 <script setup lang="ts">
 import { useDebounce } from '@vueuse/shared';
 import AutocompleteDetails from '~/components/search/AutocompleteDetails.vue';
-
-const searchString = ref('');
-const debouncedSearchString = useDebounce(searchString, 750);
+import type { CountryResponse } from '~/types/countryResponse';
+import type { AutocompleteResponse } from '~/types/autocompleteResponse';
+import CountryDetails from '~/components/search/CountryDetails.vue';
 
 const autocompleteLimit = 10;
 const baseUrl = 'http://geodb-free-service.wirefreethought.com/v1/geo/countries';
 
+const searchString = ref('');
+const debouncedSearchString = useDebounce(searchString, 750);
+
+const searchResults = ref<CountryResponse | null>(null);
+
 const {
   pending,
   data: autocompleteResults,
-  execute,
+  execute: fetchAutocompleteResults,
   error,
 } = useFetch<AutocompleteResponse>(baseUrl, {
   query: { limit: autocompleteLimit, namePrefix: searchString },
@@ -21,8 +26,13 @@ const {
 });
 
 watch(debouncedSearchString, newSearchString => {
-  if (newSearchString.length >= 3) execute();
+  if (newSearchString.length >= 3) fetchAutocompleteResults();
 });
+
+async function onSubmit(countryCode: string) {
+  const { data: countryDetails } = await useFetch<CountryResponse>(`${baseUrl}/${countryCode}`);
+  searchResults.value = countryDetails.value ?? null;
+}
 </script>
 
 <template>
@@ -39,9 +49,15 @@ watch(debouncedSearchString, newSearchString => {
       <li v-else-if="autocompleteResults?.data.length === 0 || error">No results found</li>
       <template v-if="autocompleteResults && !pending">
         <li v-for="autoCompleteResult in autocompleteResults.data" :key="autoCompleteResult.name">
-          <AutocompleteDetails :country="autoCompleteResult.name" />
+          <AutocompleteDetails
+            :country-name="autoCompleteResult.name"
+            :on-submit="() => onSubmit(autoCompleteResult.code)"
+          />
         </li>
       </template>
     </ul>
+    <div v-if="searchResults">
+      <CountryDetails :country-details="searchResults" />
+    </div>
   </div>
 </template>

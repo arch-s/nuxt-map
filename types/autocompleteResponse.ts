@@ -1,4 +1,4 @@
-interface AutocompleteResponse {
+export interface AutocompleteResponse {
   data: Array<CountryResponse>;
 }
 
