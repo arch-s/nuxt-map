@@ -1,5 +1,10 @@
 <script setup lang="ts">
 import Luigi from '~/assets/luigi.svg';
+
+interface AutocompleteDetailsProps {
+  country: string;
+}
+const { country } = defineProps<AutocompleteDetailsProps>();
 </script>
 
 <template>
@@ -8,7 +13,7 @@ import Luigi from '~/assets/luigi.svg';
   >
     <Luigi class="w-8" />
     <div class="flex flex-col">
-      <p>wow</p>
+      <p>{{ country }}</p>
     </div>
   </div>
 </template>
