@@ -43,12 +43,18 @@ async function onSubmit(countryCode: string) {
       v-model="searchString"
       class="border-2 rounded-md p-2 w-full"
       placeholder="search for a country"
+      aria-controls="autocomplete-results"
+      aria-autocomplete="list"
     />
-    <ul v-if="searchString.length >= 3" class="mt-2 border-2 rounded-md">
+    <ul v-if="searchString.length >= 3" id="autocomplete-results" class="mt-2 border-2 rounded-md">
       <li v-if="pending">Loading...</li>
       <li v-else-if="autocompleteResults?.data.length === 0 || error">No results found</li>
       <template v-if="autocompleteResults && !pending">
-        <li v-for="autoCompleteResult in autocompleteResults.data" :key="autoCompleteResult.name">
+        <li
+          v-for="autoCompleteResult in autocompleteResults.data"
+          :key="autoCompleteResult.name"
+          class="focus:bg-gray-200"
+        >
           <AutocompleteDetails
             :country-name="autoCompleteResult.name"
             :on-submit="() => onSubmit(autoCompleteResult.code)"

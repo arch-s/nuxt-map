@@ -10,7 +10,7 @@ const { countryName, onSubmit } = defineProps<AutocompleteDetailsProps>();
 
 <template>
   <div
-    class="w-full flex flex-row justify-between p-2 select-none cursor-pointer hover:bg-gray-200"
+    class="w-full flex flex-row justify-between p-2 select-none cursor-pointer hover:bg-gray-200 focus:bg-gray-200"
     @click="onSubmit"
   >
     <Luigi class="w-8" />
